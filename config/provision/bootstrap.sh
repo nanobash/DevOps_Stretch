@@ -20,3 +20,7 @@ sudo apt -y update
 # Upgrade packages
 sudo apt -y upgrade
 # ************************************************************ #
+
+# ***************** Installs Handy Utilities ***************** #
+sudo apt -y install vim htop pcregrep unzip siege
+# ************************************************************ #

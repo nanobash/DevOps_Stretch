@@ -39,6 +39,7 @@ Vagrant.configure("2") do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
+  config.vm.synced_folder "./config/miscellaneous/.vim", "/home/vagrant/.vim"
   config.vm.synced_folder "./vhosts", "/home/vagrant/vhosts"
 
   # Provider-specific configuration so you can fine-tune various
@@ -79,4 +80,7 @@ Vagrant.configure("2") do |config|
 
   # Enable provisioning with bash script.
   config.vm.provision "shell", path: "./config/provision/bootstrap.sh"
+
+  # Uploads .vimrc file to /home/vagrant/
+  config.vm.provision "file", source: "./config/miscellaneous/.vimrc", destination: "/home/vagrant/.vimrc"
 end

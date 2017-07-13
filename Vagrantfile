@@ -76,4 +76,7 @@ Vagrant.configure("2") do |config|
   #   apt-get update
   #   apt-get install -y apache2
   # SHELL
+
+  # Enable provisioning with bash script.
+  config.vm.provision "shell", path: "./config/provision/bootstrap.sh"
 end

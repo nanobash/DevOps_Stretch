@@ -78,9 +78,24 @@ Vagrant.configure("2") do |config|
   #   apt-get install -y apache2
   # SHELL
 
-  # Enable provisioning with bash script.
-  config.vm.provision "shell", path: "./config/provision/bootstrap.sh"
-
   # Uploads .vimrc file to /home/vagrant/
   config.vm.provision "file", source: "./config/miscellaneous/.vimrc", destination: "/home/vagrant/.vimrc"
+
+  # Uploads apache2.conf to /etc/apache2 directory
+  config.vm.provision "file", source: "./config/apache/apache2.conf", destination: "/tmp/apache2.conf"
+
+  # Uploads default virtual host html.conf to /etc/apache2/sites-available/ directory
+  config.vm.provision "file", source: "./config/apache/html.conf", destination: "/tmp/html.conf"
+
+  # Uploads symfony virtual host symfony.conf to /etc/apache2/sites-available/ directory
+  config.vm.provision "file", source: "./config/apache/symfony.conf", destination: "/tmp/symfony.conf"
+
+  # Uploads silex virtual host silex.conf to /etc/apache2/sites-available/ directory
+  config.vm.provision "file", source: "./config/apache/silex.conf", destination: "/tmp/silex.conf"
+
+  # Uploads yii virtual host yii.conf to /etc/apache2/sites-available/ directory
+  config.vm.provision "file", source: "./config/apache/yii.conf", destination: "/tmp/yii.conf"
+
+  # Enable provisioning with bash script.
+  config.vm.provision "shell", path: "./config/provision/bootstrap.sh"
 end

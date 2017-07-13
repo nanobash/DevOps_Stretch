@@ -51,10 +51,10 @@ Vagrant.configure("2") do |config|
     vb.gui = false
 
     # Customize the amount of memory on the VM:
-    vb.memory = "1024"
+    vb.memory = "512"
 
     # Customize the amount of CPUs on the VM:
-    vb.cpus = "2"
+    vb.cpus = "1"
 
     # Customize the name of the VM:
     vb.name = "DevOps-Stretch"

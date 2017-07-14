@@ -96,6 +96,9 @@ Vagrant.configure("2") do |config|
   # Uploads yii virtual host yii.conf to /etc/apache2/sites-available/ directory
   config.vm.provision "file", source: "./config/apache/yii.conf", destination: "/tmp/yii.conf"
 
+  # Uploads pga virtual host pga.conf to /etc/apache2/sites-available/ directory
+  config.vm.provision "file", source: "./config/apache/pga.conf", destination: "/tmp/pga.conf"
+
   # Enable provisioning with bash script.
   config.vm.provision "shell", path: "./config/provision/bootstrap.sh"
 end

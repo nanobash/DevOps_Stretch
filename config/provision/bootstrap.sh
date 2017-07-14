@@ -40,6 +40,7 @@ sudo mv /tmp/html.conf /etc/apache2/sites-available/html.conf
 sudo mv /tmp/silex.conf /etc/apache2/sites-available/silex.conf
 sudo mv /tmp/symfony.conf /etc/apache2/sites-available/symfony.conf
 sudo mv /tmp/yii.conf /etc/apache2/sites-available/yii.conf
+sudo mv /tmp/pga.conf /etc/apache2/sites-available/pga.conf
 # ************************************************************ #
 
 # ***************** Configures Virtual Hosts ***************** #
@@ -57,6 +58,21 @@ sudo a2ensite silex.conf
 
 #Enables yii.conf virtual host
 sudo a2ensite yii.conf
+# ************************************************************ #
+
+# ********* Install PostgreSQL 9.6 && phpPgAdmin 5.1 ********* #
+sudo apt -y install postgresql phppgadmin
+
+# Creates database 'admin' with the user 'admin' using password of 'admin' and grants all the privileges to the database
+sudo -u postgres psql -c "CREATE DATABASE admin ENCODING 'UTF8' LC_COLLATE='en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8'" 2> /dev/null;
+sudo -u postgres psql -c "CREATE ROLE admin WITH LOGIN PASSWORD 'admin'" 2> /dev/null;
+sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE admin TO admin" 2> /dev/null;
+
+# Disables phpPgAdmin config
+sudo a2disconf phppgadmin
+
+# Enables phpPgAdmin virtual host
+sudo a2ensite pga.conf
 # ************************************************************ #
 
 # ********************* Restart Services ********************* #

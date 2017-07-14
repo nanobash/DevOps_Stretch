@@ -4,6 +4,20 @@
 # *        Maintains debian/stretch Operating System         * #
 # ************************************************************ #
 
+# ********************* Define functions ********************* #
+is_installed()
+{
+    # Returns 0 if command ($1) executed successfully, 1 otherwise
+    eval $1 > /dev/null 2>&1
+
+    if [ $? -eq 0 ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+# ************************************************************ #
+
 # ************************** Basics ************************** #
 # Fixes broken dependencies
 sudo apt -f install
@@ -61,15 +75,23 @@ sudo a2ensite yii.conf
 # ************************************************************ #
 
 # ********* Install PostgreSQL 9.6 && phpPgAdmin 5.1 ********* #
-sudo apt -y install postgresql phppgadmin
+if [ is_installed 'sudo -u postgres psql -c "SELECT VERSION()"' -eq 1 ]; then
+    # Installs PostgreSQL
+    sudo apt install -y postgresql
 
-# Creates database 'admin' with the user 'admin' using password of 'admin' and grants all the privileges to the database
-sudo -u postgres psql -c "CREATE DATABASE admin ENCODING 'UTF8' LC_COLLATE='en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8'" 2> /dev/null;
-sudo -u postgres psql -c "CREATE ROLE admin WITH LOGIN PASSWORD 'admin'" 2> /dev/null;
-sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE admin TO admin" 2> /dev/null;
+    # Creates database 'admin' with the user 'admin' using password of 'admin' and grants all the privileges to the database
+    sudo -u postgres psql -c "CREATE DATABASE admin ENCODING 'UTF8' LC_COLLATE='en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8'" 2> /dev/null;
+    sudo -u postgres psql -c "CREATE ROLE admin WITH LOGIN PASSWORD 'admin'" 2> /dev/null;
+    sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE admin TO admin" 2> /dev/null;
+fi
 
-# Disables phpPgAdmin config
-sudo a2disconf phppgadmin
+if [ ! -d /usr/share/phppgadmin/ ]; then
+    # Installs phpPgAdmin
+    sudo apt install -y phppgadmin
+
+    # Disables phpPgAdmin config
+    sudo a2disconf phppgadmin
+fi
 
 # Enables phpPgAdmin virtual host
 sudo a2ensite pga.conf

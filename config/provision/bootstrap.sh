@@ -41,6 +41,7 @@ sudo mv /tmp/silex.conf /etc/apache2/sites-available/silex.conf
 sudo mv /tmp/symfony.conf /etc/apache2/sites-available/symfony.conf
 sudo mv /tmp/yii.conf /etc/apache2/sites-available/yii.conf
 sudo mv /tmp/pga.conf /etc/apache2/sites-available/pga.conf
+sudo mv /tmp/pma.conf /etc/apache2/sites-available/pma.conf
 # ************************************************************ #
 
 # ***************** Configures Virtual Hosts ***************** #
@@ -62,7 +63,7 @@ sudo a2ensite yii.conf
 
 # ********* Install PostgreSQL 9.6 && phpPgAdmin 5.1 ********* #
 # Test command returning ($?) 0 on success and 1 on error indicating that postgres is not installed
-eval 'sudo -u postgres psql -c "SELECT VERSION()"' > /dev/null 2>&1
+eval "sudo -u postgres psql -c \"SELECT VERSION()\"" > /dev/null 2>&1
 
 if [ $? -eq 1 ]; then
     # Installs PostgreSQL
@@ -86,7 +87,41 @@ fi
 sudo a2ensite pga.conf
 # ************************************************************ #
 
+# *********** Installs MySQL 5.7 && phpMyAdmin 4.7 *********** #
+eval "dpkg -l | grep mysql-server"
+
+if [ $? -eq 1 ]; then
+    touch /tmp/mysql.list
+
+    echo "deb http://repo.mysql.com/apt/debian/ stretch mysql-apt-config" >> /tmp/mysql.list
+    echo "deb http://repo.mysql.com/apt/debian/ stretch mysql-5.7" >> /tmp/mysql.list
+    echo "deb http://repo.mysql.com/apt/debian/ stretch mysql-tools" >> /tmp/mysql.list
+    echo "deb http://repo.mysql.com/apt/debian/ stretch mysql-tools-preview" >> /tmp/mysql.list
+    echo "deb-src http://repo.mysql.com/apt/debian/ stretch mysql-5.7" >> /tmp/mysql.list
+
+    sudo mv /tmp/mysql.list /etc/apt/sources.list.d/mysql.list
+
+    sudo apt -y update
+
+    echo "mysql-server mysql-community-server/root-pass password root" | sudo debconf-set-selections;
+    echo "mysql-server mysql-community-server/re-root-pass password root" | sudo debconf-set-selections;
+
+    sudo apt install -y mysql-server
+fi
+
+if [ ! -d /usr/share/phpMyAdmin ]; then
+    wget -O /tmp/pma.zip https://files.phpmyadmin.net/phpMyAdmin/4.7.2/phpMyAdmin-4.7.2-all-languages.zip
+    sudo unzip -d /tmp/pma /tmp/pma.zip;
+    sudo mv /tmp/pma/* /usr/share/phpMyAdmin;
+    sudo rm -rf /tmp/pma;
+fi
+
+# Enables phpMyAdmin virtual host
+sudo a2ensite pma.conf
+# ************************************************************ #
+
 # ********************* Restart Services ********************* #
 sudo systemctl restart apache2.service
 sudo systemctl restart postgresql.service
+sudo systemctl restart mysql.service
 # ************************************************************ #

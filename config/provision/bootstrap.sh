@@ -4,20 +4,6 @@
 # *        Maintains debian/stretch Operating System         * #
 # ************************************************************ #
 
-# ********************* Define functions ********************* #
-is_installed()
-{
-    # Returns 0 if command ($1) executed successfully, 1 otherwise
-    eval $1 > /dev/null 2>&1
-
-    if [ $? -eq 0 ]; then
-        return 0
-    else
-        return 1
-    fi
-}
-# ************************************************************ #
-
 # ************************** Basics ************************** #
 # Fixes broken dependencies
 sudo apt -f install
@@ -75,7 +61,10 @@ sudo a2ensite yii.conf
 # ************************************************************ #
 
 # ********* Install PostgreSQL 9.6 && phpPgAdmin 5.1 ********* #
-if [ is_installed 'sudo -u postgres psql -c "SELECT VERSION()"' -eq 1 ]; then
+# Test command returning ($?) 0 on success and 1 on error indicating that postgres is not installed
+eval 'sudo -u postgres psql -c "SELECT VERSION()"' > /dev/null 2>&1
+
+if [ $? -eq 1 ]; then
     # Installs PostgreSQL
     sudo apt install -y postgresql
 
@@ -99,4 +88,5 @@ sudo a2ensite pga.conf
 
 # ********************* Restart Services ********************* #
 sudo systemctl restart apache2.service
+sudo systemctl restart postgresql.service
 # ************************************************************ #

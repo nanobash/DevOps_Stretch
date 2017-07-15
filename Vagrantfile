@@ -102,6 +102,9 @@ Vagrant.configure("2") do |config|
   # Uploads pma virtual host pma.conf to /etc/apache2/sites-available/ directory
   config.vm.provision "file", source: "./config/apache/pma.conf", destination: "/tmp/pma.conf"
 
+  # Enable provisioning with php script by uploading to the VM and run by bash script.
+  config.vm.provision "file", source: "./config/provision/bootstrap.php", destination: "/home/vagrant/bootstrap.php"
+
   # Enable provisioning with bash script.
   config.vm.provision "shell", path: "./config/provision/bootstrap.sh"
 end

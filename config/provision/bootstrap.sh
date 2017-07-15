@@ -120,6 +120,10 @@ fi
 sudo a2ensite pma.conf
 # ************************************************************ #
 
+# ******************** Runs bootstrap.php ******************** #
+sudo php /home/vagrant/bootstrap.php
+# ************************************************************ #
+
 # ********************* Restart Services ********************* #
 sudo systemctl restart apache2.service
 sudo systemctl restart postgresql.service

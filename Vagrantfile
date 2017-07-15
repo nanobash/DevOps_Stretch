@@ -40,7 +40,10 @@ Vagrant.configure("2") do |config|
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
   config.vm.synced_folder "./config/miscellaneous/.vim", "/home/vagrant/.vim"
-  config.vm.synced_folder "./vhosts", "/home/vagrant/vhosts"
+  config.vm.synced_folder "./vhosts", "/home/vagrant/vhosts",
+    :owner => 'www-data',
+    :group => 'www-data',
+    :mount_options => ['dmode=755', 'fmode=755']
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.

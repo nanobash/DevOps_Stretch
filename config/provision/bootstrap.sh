@@ -63,7 +63,7 @@ sudo a2ensite yii.conf
 
 # ********* Install PostgreSQL 9.6 && phpPgAdmin 5.1 ********* #
 # Test command returning ($?) 0 on success and 1 on error indicating that postgres is not installed
-eval "sudo -u postgres psql -c \"SELECT VERSION()\"" > /dev/null 2>&1
+sudo -u postgres psql -c "SELECT VERSION()" > /dev/null 2>&1
 
 if [ $? -eq 1 ]; then
     # Installs PostgreSQL
@@ -91,22 +91,22 @@ sudo a2ensite pga.conf
 eval "dpkg -l | grep mysql-server"
 
 if [ $? -eq 1 ]; then
-    touch /tmp/mysql.list
+    echo "mysql-community-server mysql-community-server/root-pass password admin" | sudo debconf-set-selections
+    echo "mysql-community-server mysql-community-server/re-root-pass password admin" | sudo debconf-set-selections
 
-    echo "deb http://repo.mysql.com/apt/debian/ stretch mysql-apt-config" >> /tmp/mysql.list
-    echo "deb http://repo.mysql.com/apt/debian/ stretch mysql-5.7" >> /tmp/mysql.list
-    echo "deb http://repo.mysql.com/apt/debian/ stretch mysql-tools" >> /tmp/mysql.list
-    echo "deb http://repo.mysql.com/apt/debian/ stretch mysql-tools-preview" >> /tmp/mysql.list
-    echo "deb-src http://repo.mysql.com/apt/debian/ stretch mysql-5.7" >> /tmp/mysql.list
+    wget -O /tmp/mysql-apt-config.deb https://repo.mysql.com/mysql-apt-config_0.8.6-1_all.deb
 
-    sudo mv /tmp/mysql.list /etc/apt/sources.list.d/mysql.list
+    # Installs package
+    sudo DEBIAN_FRONTEND=noninteractive dpkg -i /tmp/mysql-apt-config.deb
 
+    # Removes package
+    sudo rm /tmp/mysql-apt-config.deb
+
+    # Updates apt repository
     sudo apt -y update
 
-    echo "mysql-server mysql-community-server/root-pass password root" | sudo debconf-set-selections;
-    echo "mysql-server mysql-community-server/re-root-pass password root" | sudo debconf-set-selections;
-
-    sudo apt install -y mysql-server
+    # Installs MySQL 5.7
+    sudo apt -y install mysql-server
 fi
 
 if [ ! -d /usr/share/phpMyAdmin ]; then

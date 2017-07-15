@@ -22,7 +22,7 @@ sudo apt -y upgrade
 # ************************************************************ #
 
 # ***************** Installs Handy Utilities ***************** #
-sudo apt -y install vim htop pcregrep unzip siege curl debconf-utils
+sudo apt -y install vim htop pcregrep unzip siege curl debconf-utils net-tools
 # ************************************************************ #
 
 # *************** Installs Apache2 HTTP Server *************** #

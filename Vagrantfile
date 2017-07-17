@@ -43,7 +43,7 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder "./vhosts", "/home/vagrant/vhosts",
     :owner => 'www-data',
     :group => 'www-data',
-    :mount_options => ['dmode=755', 'fmode=755']
+    :mount_options => ['dmode=755', 'fmode=644']
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.

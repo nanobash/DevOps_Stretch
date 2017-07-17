@@ -41,19 +41,29 @@ twig:
 # Doctrine Configuration
 doctrine:
     dbal:
-        driver: pdo_mysql
-        host: '%database_host%'
-        port: '%database_port%'
-        dbname: '%database_name%'
-        user: '%database_user%'
-        password: '%database_password%'
-        charset: UTF8
-        # if using pdo_sqlite as your database driver:
-        #   1. add the path in parameters.yml
-        #     e.g. database_path: "%kernel.project_dir%/var/data/data.sqlite"
-        #   2. Uncomment database_path in parameters.yml.dist
-        #   3. Uncomment next line:
-        #path: '%database_path%'
+      default_connection: con_mysql
+      connections:
+          con_mysql:
+              driver: pdo_mysql
+              host: '%database_host_mysql%'
+              port: '%database_port_mysql%'
+              dbname: '%database_name_mysql%'
+              user: '%database_user_mysql%'
+              password: '%database_password_mysql%'
+              charset: UTF8
+              # if using pdo_sqlite as your database driver:
+              #   1. add the path in parameters.yml
+              #     e.g. database_path: "%kernel.project_dir%/var/data/data.sqlite"
+              #   2. Uncomment database_path in parameters.yml.dist
+              #   3. Uncomment next line:
+              #path: '%database_path%'
+          con_pgsql:
+              driver: pdo_pgsql
+              host: '%database_host_pgsql%'
+              port: '%database_port_pgsql%'
+              dbname: '%database_name_pgsql%'
+              user: '%database_user_pgsql%'
+              password: '%database_password_pgsql%'
 
     orm:
         auto_generate_proxy_classes: '%kernel.debug%'
@@ -73,3 +83,12 @@ assetic:
     use_controller: '%kernel.debug%'
     filters:
         cssrewrite: ~
+
+doctrine_migrations:
+    dir_name:             '%kernel.root_dir%/Migrations'
+    namespace:            Application\Migrations
+    table_name:           migration_versions
+    name:                 'Application Migrations'
+
+    # Organize migrations mode. Possible values are: "BY_YEAR", "BY_YEAR_AND_MONTH", false
+    organize_migrations:  BY_YEAR
